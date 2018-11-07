@@ -11,19 +11,49 @@ class Category
 {
 
 	public:
+	    //
+	    static int totalCategoryCount;
+
 		// Constructor
-		Category(void);
+		Category(string, int);
+		//
+		void setCategoryNumber(int);
+		//
+		void setCurrentCategoryBalance(float);
+		//
+		void setCategoryName(string);
+		//
+		int getCategoryNumber(void);
+		//
+		float getCurrentCategoryBalance(void);
+		//
+		string getCategoryName(void);
+		//
+		void addToFile(void);
+		//
+		void sortCategoryByNumber(void);
 		// Destructor
 		~Category(void);
 		//
 		
 		
 	private:
+
+		struct category
+	    {
+	        int categoryNumber;
+	        float currentCategoryBalance;
+	        string categoryName;
+	    };
+	    typedef category categoryLists;
+	    
 		//
 		void createFile(void);
 		//
-		ofstream category_file;
-
+		fstream category_file;
+		//
+		categoryLists categoryList[50];
+		
 };
 
 #endif

@@ -11,18 +11,43 @@ class Transaction
 {
 	
 	public:
-		// Constructor
-		Transaction(void);
-		// Destructor
-		~Transaction(void);
 		//
-		
+	    static int totalTransactionCount;
+
+		// Constructor
+		Transaction(string, string, float);
+		//
+		void setAmount(float);
+		//
+		void setDate(string);
+		//
+		void setDescription(string);
+		//
+		float getAmount(void);
+		//
+		string getDate(void);
+		//
+		string getDescription(void);
+		//
+		void addToFile(void);
+		// Destructor
+		~Transaction(void);		
 		
 	private:
+		struct transaction
+	    {
+	        float amount;
+	        string date;
+	        string description;
+	    };
+	    typedef transaction transactionLists;
+	    
 		//
 		void createFile(void);
 		//
-		ofstream transaction_file;
+		fstream transaction_file;
+		//
+		transactionLists transactionList[500];
 
 };
 
