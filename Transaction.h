@@ -1,9 +1,7 @@
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
 
-// Standart Libraries
-#include <string>
-#include <fstream>
+#include "Category.h"
 
 using namespace std;
 
@@ -11,11 +9,8 @@ class Transaction
 {
 	
 	public:
-		//
-	    static int totalTransactionCount;
-
 		// Constructor
-		Transaction(string, string, float);
+		Transaction(Category &categoryID, string, string, float);
 		//
 		void setAmount(float);
 		//
@@ -23,17 +18,24 @@ class Transaction
 		//
 		void setDescription(string);
 		//
-		float getAmount(void);
+		float getAmount(void) const;
 		//
-		string getDate(void);
+		string getDate(void) const;
 		//
-		string getDescription(void);
+		string getDescription(void) const;
 		//
-		void addToFile(void);
+		void addToFile(int);
 		// Destructor
 		~Transaction(void);		
-		
+
+		//
+	    static int totalTransactionCount;
+
 	private:
+
+		//
+		Category categoryObject;
+
 		struct transaction
 	    {
 	        float amount;
@@ -44,8 +46,7 @@ class Transaction
 	    
 		//
 		void createFile(void);
-		//
-		fstream transaction_file;
+
 		//
 		transactionLists transactionList[500];
 

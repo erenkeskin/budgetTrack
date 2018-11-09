@@ -1,15 +1,17 @@
-// Standart Libraries
-#include <iostream>
-#include <string>
-#include <iomanip>
-
 // User Defined Libraries
 #include "Category.h"
 
 using namespace std;
 
-//static
+// static
 int Category::totalCategoryCount = 0;
+float Category::balanceValue = 0;
+
+//
+const string filename = "budget.txt";
+const string temporaryFilename = "budgetTemporary.txt";
+//
+fstream category_file;
 
 // Constructor
 Category::Category(string catName, int catNumber = 0)
@@ -21,24 +23,24 @@ Category::Category(string catName, int catNumber = 0)
         cout << "Total Category Count: " << this->totalCategoryCount << endl;
         createFile();
         setCategoryName(catName);
-        setCurrentCategoryBalance(0);
+        setCategoryBalance(0.0);
         setCategoryNumber(catNumber);
         addToFile();
+        category_file.close();
     }
 	
 }
 
+//
 void Category::createFile(void)
 {
 	// https://www.studytonight.com/cpp/file-streams-in-cpp.php
-    string filename = "budget.txt";
-
     category_file.open(filename, fstream::in | fstream::out | fstream::app);
 
     // If file does not exist, Create new file
     if (!category_file) 
     {
-        cout << "Cannot open file, file does not exist. Creating new file..";
+        cout << "Cannot open budget file, file does not exist. Creating new file.." << endl;
         category_file.open(filename, fstream::in | fstream::out | fstream::trunc);
         category_file.close();
     } else {    // use existing file 
@@ -53,8 +55,9 @@ void Category::setCategoryNumber(int catNumber)
 }
 
 //
-void Category::setCurrentCategoryBalance(float balanceNumber)
+void Category::setCategoryBalance(float balanceNumber)
 {
+    balanceValue = 0;
     this->categoryList[totalCategoryCount].currentCategoryBalance = balanceNumber;
 }
 
@@ -65,19 +68,27 @@ void Category::setCategoryName(string catName)
 }
 
 //
-int Category::getCategoryNumber(void)
+void Category::setCurrentCategoryBalance(float balanceNumber)
+{
+    balanceValue += balanceNumber;
+    //this->categoryList[totalCategoryCount].currentCategoryBalance = balanceValue;
+    //cout << "Cat Balance: " << this->categoryList[totalCategoryCount].currentCategoryBalance << endl;
+}
+
+//
+int Category::getCategoryNumber(void) const
 {
     return this->categoryList[totalCategoryCount].categoryNumber;
 }
 
 //
-float Category::getCurrentCategoryBalance(void)
+float Category::getCurrentCategoryBalance(void) const
 {
-    return this->categoryList[totalCategoryCount].currentCategoryBalance;
+    return this->balanceValue;
 }
 
 //
-string Category::getCategoryName(void)
+string Category::getCategoryName(void) const
 {
     return this->categoryList[totalCategoryCount].categoryName;
 }

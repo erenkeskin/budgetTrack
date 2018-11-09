@@ -2,6 +2,8 @@
 #define CATEGORY_H
 
 // Standart Libraries
+#include <iostream>
+#include <iomanip>
 #include <string>
 #include <fstream>
 
@@ -11,34 +13,39 @@ class Category
 {
 
 	public:
-	    //
-	    static int totalCategoryCount;
 
 		// Constructor
 		Category(string, int);
 		//
 		void setCategoryNumber(int);
 		//
-		void setCurrentCategoryBalance(float);
+		void setCategoryBalance(float);
 		//
 		void setCategoryName(string);
 		//
-		int getCategoryNumber(void);
+		void setCurrentCategoryBalance(float);
 		//
-		float getCurrentCategoryBalance(void);
+		int getCategoryNumber(void) const;
 		//
-		string getCategoryName(void);
+		float getCurrentCategoryBalance(void) const;
+		//
+		string getCategoryName(void) const;
 		//
 		void addToFile(void);
 		//
 		void sortCategoryByNumber(void);
 		// Destructor
 		~Category(void);
-		//
+
+	    //
+	    static int totalCategoryCount;
+	    //
+		static float balanceValue;
 		
 		
 	private:
 
+		//
 		struct category
 	    {
 	        int categoryNumber;
@@ -49,8 +56,6 @@ class Category
 	    
 		//
 		void createFile(void);
-		//
-		fstream category_file;
 		//
 		categoryLists categoryList[50];
 		

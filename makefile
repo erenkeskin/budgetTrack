@@ -19,5 +19,7 @@ $(TARGET): $(OBJS)
 
 clean:
 	rm -rf $(TARGET) *.o *.txt
+
+debug: clean all
 	
-.PHONY: all clean
+.PHONY: debug clean all

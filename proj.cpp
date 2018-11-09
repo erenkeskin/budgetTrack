@@ -11,7 +11,6 @@
 */
 
 #include <iostream>
-#include "Category.h"
 #include "Transaction.h"
 
 using namespace std;
@@ -19,38 +18,31 @@ using namespace std;
 int main(void)
 {
 
-	Category category1("catA", 10);
+	Category category1("catA", 301);
+	Transaction transaction1(category1, "Market1", "2018/11/08", 50.0);
+	cout << "Main Cat Balance: " <<  category1.getCurrentCategoryBalance() << endl << endl;
+	Transaction transaction4(category1, "Market4", "2018/11/08", 50.0);
+	cout << "Main Cat Balance: " <<  category1.getCurrentCategoryBalance() << endl << endl;
+	Transaction transaction5(category1, "Market5", "2018/11/08", 50.0);
+	cout << "Main Cat Balance: " <<  category1.getCurrentCategoryBalance() << endl << endl;
+	Transaction transaction6(category1, "Market6", "2018/11/08", 50.0);
+	cout << "Main Cat Balance: " <<  category1.getCurrentCategoryBalance() << endl << endl;
+	Category category2("catB", 113);
+	Transaction transaction2(category2, "Market2", "2019/11/08", 150.0);
+	Category category3("catC", 254);
+	Transaction transaction3(category3, "Market3", "2020/11/08", 250.0);
 
-	cout << "Category Number: " << category1.getCategoryNumber() << endl;
-	cout << "Category Name: " << category1.getCategoryName() << endl;
+	string haystack("some string with words in it");
 
-	Category category2("catB", 11);
-
-	cout << "Category Number: " << category2.getCategoryNumber() << endl;
-	cout << "Category Name: " << category2.getCategoryName() << endl;
-
-	Category category3("catC", 12);
-
-	cout << "Category Number: " << category3.getCategoryNumber() << endl;
-	cout << "Category Name: " << category3.getCategoryName() << endl;
-
-	Transaction transaction1("Market1", "2018/11/08", 50.0);
-
-	cout << "Transaction Description: " << transaction1.getDescription() << endl;
-	cout << "Transaction Date: " << transaction1.getDate() << endl;
-	cout << "Transaction Amount: " << transaction1.getAmount() << endl;
-
-	Transaction transaction2("Market2", "2019/11/08", 150.0);
-
-	cout << "Transaction Description: " << transaction2.getDescription() << endl;
-	cout << "Transaction Date: " << transaction2.getDate() << endl;
-	cout << "Transaction Amount: " << transaction2.getAmount() << endl;
-
-	Transaction transaction3("Market3", "2020/11/08", 250.0);
-
-	cout << "Transaction Description: " << transaction3.getDescription() << endl;
-	cout << "Transaction Date: " << transaction3.getDate() << endl;
-	cout << "Transaction Amount: " << transaction3.getAmount() << endl;
+    string::size_type pos = haystack.find("words");
+    if(pos != string::npos)
+    {
+        cout << "found \"words\" at position " << pos << endl;
+    }
+    else
+    {
+        cout << "\"words\" not found" << endl;
+    }
 
 	return 0;
 }

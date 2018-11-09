@@ -1,18 +1,22 @@
-// Standart Libraries
-#include <iostream>
-#include <string>
-#include <iomanip>
-
 // User Defined Libraries
 #include "Transaction.h"
+#include "Category.h"
 
 using namespace std;
 
-//static
+// static
 int Transaction::totalTransactionCount = 0;
 
+//
+const string filename = "transaction.txt";
+const string temporaryFilename = "transactionTemporary.txt";
+
+//
+fstream transaction_file;
+
 // Constructor
-Transaction::Transaction(string Description, string Date, float Amount = 0.0)
+Transaction::Transaction(Category &categoryID, string Description, string Date, float Amount = 0.0)
+	: categoryObject(categoryID)
 {
 	if(++(this->totalTransactionCount) == 500)
     {
@@ -23,20 +27,22 @@ Transaction::Transaction(string Description, string Date, float Amount = 0.0)
         setAmount(Amount);
         setDate(Date);
         setDescription(Description);
-        addToFile();
+        categoryObject.setCurrentCategoryBalance(this->getAmount());
+        categoryObject.addToFile();
+        addToFile(categoryObject.getCategoryNumber());
+        transaction_file.close();
     }
 }
 
+//
 void Transaction::createFile(void)
 {
-    string filename = "transaction.txt";
-
     transaction_file.open(filename, fstream::in | fstream::out | fstream::app);
 
     // If file does not exist, Create new file
     if (!transaction_file) 
     {
-        cout << "Cannot open file, file does not exist. Creating new file..";
+        cout << "Cannot open transaction file, file does not exist. Creating new file.." << endl;
         transaction_file.open(filename, fstream::in | fstream::out | fstream::trunc);
         transaction_file.close();
     } else {    // use existing file 
@@ -63,32 +69,31 @@ void Transaction::setDescription(string Description)
 }
 
 //
-float Transaction::getAmount(void)
+float Transaction::getAmount(void) const
 {
 	return this->transactionList[totalTransactionCount].amount;
 }
 
 //
-string Transaction::getDate(void)
+string Transaction::getDate(void) const
 {
 	return this->transactionList[totalTransactionCount].date;
 }
 
 //
-string Transaction::getDescription(void)
+string Transaction::getDescription(void) const
 {
 	return this->transactionList[totalTransactionCount].description;
 }
 
 //
-void Transaction::addToFile(void)
+void Transaction::addToFile(int categoryNumber)
 {
-	transaction_file << left << setw(3) << "101" << " ";
+	transaction_file << left << setw(3) << categoryNumber << " ";
 	transaction_file << left << setw(10) << this->getDate() << " ";
     transaction_file << right << setw(9) << this->getAmount() << "  ";
     transaction_file << left << setw(55) << this->getDescription() << endl;
 }
-
 
 // Destructor
 Transaction::~Transaction(void)
