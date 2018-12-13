@@ -12,7 +12,8 @@ const string filename = "transaction.txt";
 const string temporaryFilename = "transactionTemporary.txt";
 
 //
-fstream transaction_file;
+ofstream transaction_file;
+ifstream transaction_file_read;
 
 // Constructor
 Transaction::Transaction(Category &categoryID, string Description, string Date, float Amount = 0.0)
@@ -37,13 +38,13 @@ Transaction::Transaction(Category &categoryID, string Description, string Date, 
 //
 void Transaction::createFile(void)
 {
-    transaction_file.open(filename, fstream::in | fstream::out | fstream::app);
+    transaction_file.open(filename, ios::out | ios::app);
 
     // If file does not exist, Create new file
     if (!transaction_file) 
     {
         cout << "Cannot open transaction file, file does not exist. Creating new file.." << endl;
-        transaction_file.open(filename, fstream::in | fstream::out | fstream::trunc);
+        transaction_file.open(filename, ios::out | ios::app);
         transaction_file.close();
     } else {    // use existing file 
         //cout << "Success " << filename << " found." << endl;
@@ -89,10 +90,40 @@ string Transaction::getDescription(void) const
 //
 void Transaction::addToFile(int categoryNumber)
 {
-	transaction_file << left << setw(3) << categoryNumber << " ";
-	transaction_file << left << setw(10) << this->getDate() << " ";
-    transaction_file << right << setw(9) << this->getAmount() << "  ";
-    transaction_file << left << setw(55) << this->getDescription() << endl;
+	string line;
+	size_t categoryNumberLenght = to_string(categoryNumber).length();
+
+	transaction_file_read.open(filename);
+
+	while (transaction_file_read) 
+	{ 
+  
+        // Read a Line from File 
+  		while(getline(transaction_file_read, line))
+  		{
+	        size_t pos = line.find(to_string(categoryNumber));
+            if (pos != string::npos)
+            {
+            	line.replace(pos, categoryNumberLenght, "999");
+        		transaction_file << line << endl;
+            } else {
+            	break;
+            }
+	    }
+  
+        // Print line in Console 
+        // cout << line << endl; 
+    } 
+	transaction_file_read.close();
+
+    cout << endl << endl; 
+
+    transaction_file << left  << setw(3)  << categoryNumber 		<< " ";
+	transaction_file << left  << setw(10) << this->getDate() 		<< " ";
+    transaction_file << right << setw(9)  << this->getAmount() 		<< "  ";
+    transaction_file << left  << setw(55) << this->getDescription() << endl;
+
+	
 }
 
 // Destructor

@@ -47,6 +47,11 @@ class Transaction
 		//
 		void createFile(void);
 
+		inline bool is_empty(ifstream & pFile)
+		{
+		    return pFile.peek() == ifstream::traits_type::eof();
+		}
+
 		//
 		transactionLists transactionList[500];
 

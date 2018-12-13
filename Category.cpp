@@ -4,14 +4,15 @@
 using namespace std;
 
 // static
-int Category::totalCategoryCount = 0;
+int Category::totalCategoryCount = 0; 
 float Category::balanceValue = 0;
 
 //
 const string filename = "budget.txt";
 const string temporaryFilename = "budgetTemporary.txt";
 //
-fstream category_file;
+ofstream category_file;
+ifstream category_file_read;
 
 // Constructor
 Category::Category(string catName, int catNumber = 0)
@@ -35,13 +36,13 @@ Category::Category(string catName, int catNumber = 0)
 void Category::createFile(void)
 {
 	// https://www.studytonight.com/cpp/file-streams-in-cpp.php
-    category_file.open(filename, fstream::in | fstream::out | fstream::app);
+    category_file.open(filename, ios::out | ios::app);
 
     // If file does not exist, Create new file
     if (!category_file) 
     {
         cout << "Cannot open budget file, file does not exist. Creating new file.." << endl;
-        category_file.open(filename, fstream::in | fstream::out | fstream::trunc);
+        category_file.open(filename, ios::out | ios::app);
         category_file.close();
     } else {    // use existing file 
         //cout << "Success " << filename << " found." << endl;

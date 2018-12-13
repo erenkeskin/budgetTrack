@@ -32,17 +32,5 @@ int main(void)
 	Category category3("catC", 254);
 	Transaction transaction3(category3, "Market3", "2020/11/08", 250.0);
 
-	string haystack("some string with words in it");
-
-    string::size_type pos = haystack.find("words");
-    if(pos != string::npos)
-    {
-        cout << "found \"words\" at position " << pos << endl;
-    }
-    else
-    {
-        cout << "\"words\" not found" << endl;
-    }
-
 	return 0;
 }
