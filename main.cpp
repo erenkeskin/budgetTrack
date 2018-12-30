@@ -15,34 +15,18 @@
 		-v0.3.1		Bugs are fixed on user interface
 
 ***********************************************/
-#ifndef TRANSACTION_H
-#define TRANSACTION_H
-
-#include "Category.h"
+#include "Transaction.h"
 
 using namespace std;
 
-// Transaction Class
-class Transaction
+int main(void) 
 {
-	public:
-		// Constructor
-		Transaction(Category & categoryObjectReference);
-			
-		//	Menu for users
-		void menu(void);
-		// Sort all budget data depended category number
-		void sortBudgetData(void);
-		// Sort all transaction data depended category number
-		void sortTransactionData(void);
-		// Show sample report
-		void sampleReport(void);
-		// Destructor
-		~Transaction(void);
+	
+	Category CategoryObject;	
 
-	private:
-		Category categoryObject;
+	Transaction transactionObject(CategoryObject);
 
-};
+	transactionObject.menu();
 
-#endif
+	return 0;
+}

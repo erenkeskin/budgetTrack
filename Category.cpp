@@ -1,115 +1,264 @@
-// User Defined Libraries
+/***********************************************
+
+	Project: 		Budget Track
+	Author: 		Hasan Eren KESKIN
+	Student Number: 151220144053
+	Date:			24.12.2018
+
+	Version:		0.3.1
+
+	- v0.1			Budgets created, added, sorted
+	- v0.2			Transcations created, added, sorted
+		- v0.2.1	Transactions and Budgets are related each other
+		- v0.2.2	Transactions and Budget listed in a ".txt" file
+	- v0.3			Simple user interface is ready
+		-v0.3.1		Bugs are fixed on user interface
+
+***********************************************/
+#include <iomanip>
 #include "Category.h"
 
 using namespace std;
 
-// static
-int Category::totalCategoryCount = 0; 
-float Category::balanceValue = 0;
+// Static size counter variables
+int Category::budgetStructSize 		= 0;
+int Category::transactionStructSize = 0;
 
-//
-const string filename = "budget.txt";
-const string temporaryFilename = "budgetTemporary.txt";
-//
-ofstream category_file;
-ifstream category_file_read;
+// Get Budget Structure Size
+int Category::getBudgetStructSize(void)
+{
+	return budgetStructSize;
+}
+
+// Get Transactions Structure Size
+int Category::getTransactionStructSize(void)
+{
+	return transactionStructSize;
+}
+
+// Reading data from Budget.txt
+ostream &operator<<(ostream &output, const Budget &budgetStructure )
+{
+	output << budgetStructure.categoryNumber;
+	output << budgetStructure.categoryBalance;
+	output << budgetStructure.categoryName;
+
+	return output;
+}
+
+// Reading data from Transactions.txt
+ostream &operator<<(ostream &output, const Transactions &transactionStructure)
+{
+	output << transactionStructure.categoryNumber;
+	output << transactionStructure.transactionDate;
+	output << transactionStructure.transactionAmount;
+	output << transactionStructure.transactionDescription;
+
+	return output;
+}
+
+// Writing data to Budget.txt
+istream &operator>>(istream &input, Budget &budgetStructure)
+{
+	
+	input.ignore();
+	input >> setw(3)	>> budgetStructure.categoryNumber;
+	input.ignore();
+	input >> setw(15) 	>> budgetStructure.categoryBalance;
+	input.ignore();
+	input >> setw(66) 	>> budgetStructure.categoryName;
+	
+	return input;
+}
+
+// Writing data to Transactions.txt
+istream &operator>>(istream &input, Transactions &transactionStructure)
+{
+	input.ignore();	
+	input >> setw(3) 	>> transactionStructure.categoryNumber;
+	input.ignore();
+	input >> setw(10) 	>> transactionStructure.transactionDate;
+	input.ignore();
+	input >> setw(20) 	>> transactionStructure.transactionAmount;
+	input.ignore();
+	input >> setw(55) 	>> transactionStructure.transactionDescription;
+	
+	return input;
+}
 
 // Constructor
-Category::Category(string catName, int catNumber = 0)
-{
-    if(++(this->totalCategoryCount) == 50)
-    {
-        cout << "You can add only 50 category. You reached this limit." << endl;
-    } else {
-        cout << "Total Category Count: " << this->totalCategoryCount << endl;
-        createFile();
-        setCategoryName(catName);
-        setCategoryBalance(0.0);
-        setCategoryNumber(catNumber);
-        addToFile();
-        category_file.close();
-    }
+Category::Category(void)
+{		
+	fstream Budget;
 	
+	Budget.open("Budget.txt", ios::out | ios::trunc);
+
+	// If file doesn't exist, create a new file
+	if(Budget.is_open() == false)
+	{
+		Budget.open("Budget.txt", ios::out | ios::trunc);
+	}
+	Budget.close();
 }
 
-//
-void Category::createFile(void)
+// Write data to Budget.txt
+void Category::writeBudgetFile(void)
 {
-	// https://www.studytonight.com/cpp/file-streams-in-cpp.php
-    category_file.open(filename, ios::out | ios::app);
+	int numberOfCategory = 0;
+	string balanceOfCategory;
+	string nameOfCategory;
 
-    // If file does not exist, Create new file
-    if (!category_file) 
-    {
-        cout << "Cannot open budget file, file does not exist. Creating new file.." << endl;
-        category_file.open(filename, ios::out | ios::app);
-        category_file.close();
-    } else {    // use existing file 
-        //cout << "Success " << filename << " found." << endl;
-    }
+	// Control, if structure size is maximum
+	if(getBudgetStructSize() < 51)
+	{
+		// Get data from user
+		cout << "Category Number : ";
+		cin >> numberOfCategory;
+		cout << "Category Balance : ";
+		cin >> balanceOfCategory;
+		cout << "Category Name : ";
+		cin >> nameOfCategory;	
+		
+		// File operations
+		fstream Budget;
+		
+		Budget.open("Budget.txt", ios::in | ios::out | ios::trunc);
+	
+		if(Budget.is_open() == true)
+		{
+			Budget << endl << numberOfCategory << " " << balanceOfCategory << " " << nameOfCategory;		
+		} else {
+			cout << "File is not found." << endl;
+		}
+		Budget.close();
+	} else {
+		cout << "You can't add any category. Allowed number exceeded.";	
+	}		
 }
 
-//
-void Category::setCategoryNumber(int catNumber)
+// Write datas to Transactions.txt
+void Category::writeTransactionFile(void)
 {
-    this->categoryList[totalCategoryCount].categoryNumber = catNumber;
+	int numberOfTransaction = 0;
+	string dateOfTransaction;
+	string amountOfTransaction;
+	string descriptionOfTransaction;
+
+	// Control, if structure size is maximum
+	if(getTransactionStructSize() < 501)
+	{
+		// Get data from user
+		cout << "Transaction Number : ";
+		cin >> numberOfTransaction;
+
+		cout << "Transaction Date (AA/AA/AAAA) : ";
+		cin >> dateOfTransaction;
+
+		cout << "Transaction Amount : ";
+		cin >> amountOfTransaction;
+
+		cout << "Transaction Description: ";
+		cin.ignore();
+		getline(cin, descriptionOfTransaction);
+		
+		// File Operations
+		fstream Transaction;
+	
+		Transaction.open("Transactions.txt", ios::in | ios::out | ios::ate);
+	
+		if(Transaction.is_open() == true)
+		{
+			Transaction << endl << numberOfTransaction << " " << dateOfTransaction << " " << amountOfTransaction << " " << descriptionOfTransaction;		
+		} else {
+			cout << "File is not found." << endl;
+		}
+		
+		Transaction.close();	
+	} else {
+		cout << "You can't add any transaction. Allowed number exceeded." << endl;		
+	}
 }
 
-//
-void Category::setCategoryBalance(float balanceNumber)
+// Read all data from Budget.txt
+void Category::readBudgetFile(void)
 {
-    balanceValue = 0;
-    this->categoryList[totalCategoryCount].currentCategoryBalance = balanceNumber;
+	fstream Budget;
+
+	volatile int i = 0;
+	budgetStructSize = 0;
+	Budget.open("Budget.txt", ios::in);
+	
+	if(Budget.is_open())
+	{
+		// Until End of the File (EOF)
+		while(Budget >> budget[i].categoryNumber >> budget[i].categoryBalance >> budget[i].categoryName)
+		{
+			i++;
+			budgetStructSize++;			
+		}				
+	}		
+	Budget.close();	
 }
 
-//
-void Category::setCategoryName(string catName)
+// Read all data from Transactions.txt
+void Category::readTransactionFile(void)
 {
-    this->categoryList[totalCategoryCount].categoryName = catName;
+	volatile int i = 0;
+	transactionStructSize = 0;
+
+	fstream Transaction;
+	Transaction.open("Transactions.txt", ios::in);
+	
+	if(Transaction.is_open())
+	{
+		// Until End of the File (EOF)
+		while(Transaction >> transactions[i].categoryNumber >> transactions[i].transactionDate >> transactions[i].transactionAmount >> transactions[i].transactionDescription)
+		{		
+			i++;
+			transactionStructSize++;
+		}	
+	
+	} else {
+		cout << "File can't open" << endl;	
+	}	
+	Transaction.close();	
 }
 
-//
-void Category::setCurrentCategoryBalance(float balanceNumber)
+// Show all budgets from reading with readBudgetFile 
+void Category::showBudgets(void)
 {
-    balanceValue += balanceNumber;
-    //this->categoryList[totalCategoryCount].currentCategoryBalance = balanceValue;
-    //cout << "Cat Balance: " << this->categoryList[totalCategoryCount].currentCategoryBalance << endl;
+	volatile int i = 0;
+
+	cout << "Number of Budget : " << getBudgetStructSize() << endl << endl << endl;
+	cout << "Number/\t" << "Balance/ " << "Name" << endl << endl;
+
+	for(i = 0; i < getBudgetStructSize(); i++)
+	{
+		cout << left << setw(4) << budget[i].categoryNumber << "\t\t";
+		cout << right << setw(8) << budget[i].categoryBalance;
+		cout << left << "\t " << setw(2) << budget[i].categoryName << endl;
+	}
 }
 
-//
-int Category::getCategoryNumber(void) const
-{
-    return this->categoryList[totalCategoryCount].categoryNumber;
-}
+// Show all budgets from reading with readTransactionstFile 
+void Category::showTransactions(void)
+{	
+	volatile int i = 0;
 
-//
-float Category::getCurrentCategoryBalance(void) const
-{
-    return this->balanceValue;
-}
-
-//
-string Category::getCategoryName(void) const
-{
-    return this->categoryList[totalCategoryCount].categoryName;
-}
-
-//
-void Category::addToFile(void)
-{
-    category_file << left << setw(3) << this->getCategoryNumber() << " ";
-    category_file << left << setw(9) << this->getCurrentCategoryBalance() << "  ";
-    category_file << left << setw(66) << this->getCategoryName() << endl;
-}
-
-//
-void Category::sortCategoryByNumber(void)
-{
-    
+	cout << "Number of Transaction : " << getTransactionStructSize() << endl << endl << endl;
+	cout << "Number  " << "Date  " << "Amount  " << "Description" << endl << endl;
+	
+	for(i = 0; i < getTransactionStructSize(); i++)
+	{
+		cout << left 	<< setw(4) 	<< transactions[i].categoryNumber << "\t\t";
+		cout << right 	<< setw(8) 	<< transactions[i].transactionDate;
+		cout << left 	<< "\t "	<< setw(20) << transactions[i].transactionAmount << "\t ";
+		cout << setw(60) << transactions[i].transactionDescription << endl;	
+	}	
 }
 
 // Destructor
 Category::~Category(void)
 {
-	category_file.close(); // Closing file
+
 }
